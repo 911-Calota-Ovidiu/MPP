@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 package com.example.demo.Model;
 
 public class AdultDTO {
@@ -24,24 +24,4 @@ public class AdultDTO {
         return age;
     }
 }
-=======
-package com.example.demo.Model;
 
-public class AdultDTO {
-    private String name;
-    private String address;
-    public AdultDTO(String name, String address)
-    {
-        this.name=name;
-        this.address=address;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public String getName() {
-        return name;
-    }
-}
->>>>>>> 118a3a82d5056d24973de98f517c694ff76ac1b8
