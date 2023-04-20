@@ -114,7 +114,7 @@ public class Service {
         List<AdultDTO> returnList = new ArrayList<>();
         for(Adult f:adultRepo.findAll())
         {
-            returnList.add(new AdultDTO(f.getName(),f.getAddress()));
+            returnList.add(new AdultDTO(f.getName(),f.getAddress(),f.getAge()));
         }
         return returnList;
     }
