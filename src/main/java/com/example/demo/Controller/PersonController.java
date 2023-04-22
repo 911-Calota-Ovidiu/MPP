@@ -23,7 +23,7 @@ public class PersonController {
 
     @GetMapping("/adult")
     public List<AdultDTO> getPeople(){
-        return service.getDTOadults();
+        return service.adultFirstPage();
     }
 
     @GetMapping("/adult/{personId}")
@@ -94,5 +94,62 @@ public class PersonController {
     {
         service.addChildToFamily(id,cid);
     }
+    @GetMapping("/adult/next")
+    public List<AdultDTO> getNextAdultPage()
+    {
+        return service.gettenadultsNEXT();
+    }
+    @GetMapping("/adult/prev")
+    public List<AdultDTO> getPrevAdultPage()
+    {
+        return service.gettenadultsPREV();
+    }
 
+    @GetMapping("/child/next/page")
+    public List<ChildDTO> getNextChildPage()
+    {
+        return service.gettenchildrenNEXT();
+    }
+    @GetMapping("/child/prev/page")
+    public List<ChildDTO> getPrevChildPage()
+    {
+        return service.gettenchildrenPREV();
+    }
+
+    @GetMapping("/family/next")
+    public List<FamilyDTO> getNextFamilyPage()
+    {
+        return service.gettenfamiliesNEXT();
+    }
+    @GetMapping("/family/prev")
+    public List<FamilyDTO> getPrevFamilyPage()
+    {
+        return service.gettenfamiliesPREV();
+    }
+
+    @GetMapping("/friend/next")
+    public List<Friend> getNextFriendPage()
+    {
+        return service.gettenfriendsNEXT();
+    }
+    @GetMapping("/friend/prev")
+    public List<Friend> getPrevFriendPage()
+    {
+        return service.gettenfriendsPREV();
+    }
+
+    @DeleteMapping("/child/{id}")
+    public void removeChild(@PathVariable("id") Long id){
+        service.removeChild(id);
+    }
+
+    @DeleteMapping("/family/{id}")
+    public void removeFamily(@PathVariable("id") Long id){
+        service.removeFamily(id);
+    }
+
+    @DeleteMapping("/friend/{id}")
+    public void removeFriend(@PathVariable("id") Long id){
+        service.removeFriend(id);
+    }
 }

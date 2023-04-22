@@ -24,6 +24,131 @@ public class Service {
     FamilyRepo familyRepo;
     @Autowired
     FriendRepo friendRepo;
+    Long startadult= 0L,startchild=0L,startfamily=0L,startfriend=0L;
+    public List<AdultDTO> gettenadultsNEXT()
+    {
+        List<AdultDTO> rList=new ArrayList<>();
+        Long index=0L;
+        for(Long i=startadult;i<startadult+10;i++)
+        {
+            index=i;
+            if(i+1>adultRepo.findAll().size()) break;
+            Adult a=adultRepo.findById(i).get();
+            rList.add(new AdultDTO(a.getName(),a.getAddress(),a.getAge()));
+        }
+        if(index+1>familyRepo.findAll().size()) {startfamily=0L; return null;}
+        startadult+=10;
+        return rList;
+    }
+    public List<AdultDTO> adultFirstPage(){
+        startadult=0L;
+        return gettenadultsNEXT();
+    }
+    public List<ChildDTO> gettenchildrenNEXT()
+    {
+        Long index=0L;
+        List<ChildDTO> rList=new ArrayList<>();
+        for(Long i=startchild;i<startchild+10;i++)
+        {
+            index=i;
+            if(i+1>childRepo.findAll().size()) break;
+            Child c=childRepo.findById(i).get();
+            rList.add(new ChildDTO(c.name,c.getAddress(),c.getFamily().getId()));
+        }
+        if(index+1>familyRepo.findAll().size()) {startfamily=0L; return null;}
+        startchild+=10;
+        return rList;
+    }
+    public List<FamilyDTO> gettenfamiliesNEXT()
+    {
+        List<FamilyDTO> rList=new ArrayList<>();
+        Long index=0L;
+        for(Long i=startfamily;i<startfamily+10;i++)
+        {
+            index=i;
+            if(i+1>familyRepo.findAll().size()) break;
+            Family f=familyRepo.findById(i).get();
+            rList.add(new FamilyDTO(f.getMom(),f.getDad(),f.getHomeAddress()));
+
+        }
+        startfamily+=10;
+        if(index+1>familyRepo.findAll().size()) {startfamily=0L; return null;}
+        return rList;
+    }
+    public List<Friend> gettenfriendsNEXT()
+    {
+        List<Friend> rList=new ArrayList<>();
+        Long index=0L;
+        for(Long i=startfriend;i<startfriend+10;i++)
+        {
+            index=i;
+            if(i+1>friendRepo.findAll().size()) break;
+            rList.add(friendRepo.findById(i).get());
+        }
+        if(index+1>familyRepo.findAll().size()) {startfamily=0L; return null;}
+        startfriend+=10;
+        return rList;
+    }
+
+    public List<AdultDTO> gettenadultsPREV()
+    {
+        List<AdultDTO> rList=new ArrayList<>();
+        startadult-=20;
+        if(startadult<0){startadult=0L;}
+        for(Long i=startadult;i<startadult+10;i++)
+        {
+            if(i+1>adultRepo.findAll().size()) break;
+            Adult a=adultRepo.findById(i).get();
+            rList.add(new AdultDTO(a.getName(),a.getAddress(),a.getAge()));
+        }
+
+        return rList;
+    }
+    public List<ChildDTO> gettenchildrenPREV()
+    {
+        List<ChildDTO> rList=new ArrayList<>();
+        startchild-=20;
+        if(startchild<0){startchild=0L; return null;}
+        for(Long i=startchild;i<startchild+10;i++)
+        {
+            if(i+1>childRepo.findAll().size()) break;
+            Child c=childRepo.findById(i).get();
+            rList.add(new ChildDTO(c.name,c.getAddress(),c.getFamily().getId()));
+        }
+
+        return rList;
+    }
+    public void removeFamily(Long id)
+    {
+        familyRepo.deleteById(id);
+    }
+    public List<FamilyDTO> gettenfamiliesPREV()
+    {
+        List<FamilyDTO> rList=new ArrayList<>();
+        startfamily-=20;
+        if(startfamily<0){startfamily=0L; return null;}
+        for(Long i=startfamily;i<startfamily+10;i++)
+        {
+            if(i+1>familyRepo.findAll().size()) break;
+            Family c=familyRepo.findById(i).get();
+            rList.add(new FamilyDTO(c.getMom(),c.getDad(),c.getHomeAddress()));
+        }
+        return rList;
+    }
+    public List<Friend> gettenfriendsPREV()
+    {
+        List<Friend> rList=new ArrayList<>();
+        startfriend-=20;
+        if(startfriend<0){startfriend=0L; return null;}
+        for(Long i=startfriend;i<startfriend+10;i++)
+        {
+            if(i+1>friendRepo.findAll().size()) break;
+            Friend c=friendRepo.findById(i).get();
+            rList.add(c);
+        }
+        return rList;
+    }
+
 
     public void addAdult(Adult a) {
         adultRepo.save(a);
@@ -112,7 +237,10 @@ public class Service {
         }
         return returnList;
     }
-
+    public void removeFriend(Long id)
+    {
+        friendRepo.deleteById(id);
+    }
     public Adult getAdultWithID(Long id) {
         return adultRepo.findById(id).get();
     }
