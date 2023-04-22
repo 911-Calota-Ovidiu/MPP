@@ -23,7 +23,7 @@ public class PersonController {
 
     @GetMapping("/adult")
     public List<AdultDTO> getPeople(){
-        return service.adultFirstPage();
+        return service.getAdultLimit();
     }
 
     @GetMapping("/adult/{personId}")
@@ -33,7 +33,7 @@ public class PersonController {
     @GetMapping("/child/avg")
     public int getAverageAge(){return service.averageChildAge();}
     @GetMapping("/friends")
-    public List<FriendDTO> getFriends(){return service.getDTOFriends();}
+    public List<Friend> getFriends(){return service.getFriendLimit();}
     @PostMapping("/family")
     public void addFamily(@RequestBody Family family) throws SQLException, ClassNotFoundException {
         service.addFamily(family);
@@ -43,7 +43,7 @@ public class PersonController {
         service.addFamily(family);
     }
     @GetMapping("/child")
-    public List<ChildDTO> getChildren(){return service.getDTOchildren();}
+    public List<ChildDTO> getChildren(){return service.getChildrenLimit();}
     @PostMapping("/child/{famid}/family")
     public void addChild(@RequestBody Child c,@PathVariable Long famid){
 
@@ -57,7 +57,7 @@ public class PersonController {
         }
     }
     @GetMapping("/family")
-    public List<FamilyDTO> getFamilies(){return service.getDTOfamilies();}
+    public List<FamilyDTO> getFamilies(){return service.getFamilyLimit();}
     @GetMapping("/family/{nr}")
     public List<Family> getFamiliesNR(@PathVariable("nr") Integer nr){return service.getFamiliesNR(nr);}
     @PostMapping("/friend/{p1}/{p2}")
@@ -97,45 +97,25 @@ public class PersonController {
     @GetMapping("/adult/next")
     public List<AdultDTO> getNextAdultPage()
     {
-        return service.gettenadultsNEXT();
-    }
-    @GetMapping("/adult/prev")
-    public List<AdultDTO> getPrevAdultPage()
-    {
-        return service.gettenadultsPREV();
+        return service.getAdultLimit();
     }
 
     @GetMapping("/child/next/page")
     public List<ChildDTO> getNextChildPage()
     {
-        return service.gettenchildrenNEXT();
-    }
-    @GetMapping("/child/prev/page")
-    public List<ChildDTO> getPrevChildPage()
-    {
-        return service.gettenchildrenPREV();
+        return service.getChildrenLimit();
     }
 
     @GetMapping("/family/next")
     public List<FamilyDTO> getNextFamilyPage()
     {
-        return service.gettenfamiliesNEXT();
-    }
-    @GetMapping("/family/prev")
-    public List<FamilyDTO> getPrevFamilyPage()
-    {
-        return service.gettenfamiliesPREV();
+        return service.getFamilyLimit();
     }
 
     @GetMapping("/friend/next")
     public List<Friend> getNextFriendPage()
     {
-        return service.gettenfriendsNEXT();
-    }
-    @GetMapping("/friend/prev")
-    public List<Friend> getPrevFriendPage()
-    {
-        return service.gettenfriendsPREV();
+        return service.getFriendLimit();
     }
 
     @DeleteMapping("/child/{id}")

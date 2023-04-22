@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @org.springframework.stereotype.Service
 public class Service {
@@ -25,128 +26,78 @@ public class Service {
     @Autowired
     FriendRepo friendRepo;
     Long startadult= 0L,startchild=0L,startfamily=0L,startfriend=0L;
-    public List<AdultDTO> gettenadultsNEXT()
+    public List<AdultDTO> getAdultLimit()
     {
         List<AdultDTO> rList=new ArrayList<>();
-        Long index=0L;
-        for(Long i=startadult;i<startadult+10;i++)
+        List<Adult> alist=adultRepo.findAll();
+        int lim=50;
+        for(Adult a:alist)
         {
-            index=i;
-            if(i+1>adultRepo.findAll().size()) break;
-            Adult a=adultRepo.findById(i).get();
-            rList.add(new AdultDTO(a.getName(),a.getAddress(),a.getAge()));
+            if(lim>=0)
+            {
+                AdultDTO adto=new AdultDTO(a.getName(),a.getAddress(),a.getAge());
+                rList.add(adto);
+                lim--;
+            }
+            else break;
         }
-        if(index+1>familyRepo.findAll().size()) {startfamily=0L; return null;}
-        startadult+=10;
-        return rList;
+        return rList.stream().limit(50).collect(Collectors.toList());
     }
-    public List<AdultDTO> adultFirstPage(){
-        startadult=0L;
-        return gettenadultsNEXT();
-    }
-    public List<ChildDTO> gettenchildrenNEXT()
+    public List<ChildDTO> getChildrenLimit()
     {
-        Long index=0L;
         List<ChildDTO> rList=new ArrayList<>();
-        for(Long i=startchild;i<startchild+10;i++)
+        List<Child> alist=childRepo.findAll();
+        int lim=50;
+        for(Child a:alist)
         {
-            index=i;
-            if(i+1>childRepo.findAll().size()) break;
-            Child c=childRepo.findById(i).get();
-            rList.add(new ChildDTO(c.name,c.getAddress(),c.getFamily().getId()));
+            if(lim>=0)
+            {
+                ChildDTO adto=new ChildDTO(a.getName(),a.getAddress(),a.getFamily().getId());
+                rList.add(adto);
+                lim--;
+            }
+            else break;
         }
-        if(index+1>familyRepo.findAll().size()) {startfamily=0L; return null;}
-        startchild+=10;
-        return rList;
+        return rList.stream().limit(50).collect(Collectors.toList());
     }
-    public List<FamilyDTO> gettenfamiliesNEXT()
+    public List<FamilyDTO> getFamilyLimit()
     {
         List<FamilyDTO> rList=new ArrayList<>();
-        Long index=0L;
-        for(Long i=startfamily;i<startfamily+10;i++)
+        List<Family> alist=familyRepo.findAll();
+        int lim=50;
+        for(Family a:alist)
         {
-            index=i;
-            if(i+1>familyRepo.findAll().size()) break;
-            Family f=familyRepo.findById(i).get();
-            rList.add(new FamilyDTO(f.getMom(),f.getDad(),f.getHomeAddress()));
-
+            if(lim>=0)
+            {
+                FamilyDTO adto=new FamilyDTO(a.getMom(),a.getDad(),a.getHomeAddress());
+                rList.add(adto);
+                lim--;
+            }
+            else break;
         }
-        startfamily+=10;
-        if(index+1>familyRepo.findAll().size()) {startfamily=0L; return null;}
-        return rList;
+        return rList.stream().limit(50).collect(Collectors.toList());
     }
-    public List<Friend> gettenfriendsNEXT()
+    public List<Friend> getFriendLimit()
     {
         List<Friend> rList=new ArrayList<>();
-        Long index=0L;
-        for(Long i=startfriend;i<startfriend+10;i++)
+        List<Friend> alist=friendRepo.findAll();
+        int lim=50;
+        for(Friend a:alist)
         {
-            index=i;
-            if(i+1>friendRepo.findAll().size()) break;
-            rList.add(friendRepo.findById(i).get());
+            if(lim>=0)
+            {
+                rList.add(a);
+                lim--;
+            }
+            else break;
         }
-        if(index+1>familyRepo.findAll().size()) {startfamily=0L; return null;}
-        startfriend+=10;
-        return rList;
+        return rList.stream().limit(50).collect(Collectors.toList());
     }
 
-    public List<AdultDTO> gettenadultsPREV()
-    {
-        List<AdultDTO> rList=new ArrayList<>();
-        startadult-=20;
-        if(startadult<0){startadult=0L;}
-        for(Long i=startadult;i<startadult+10;i++)
-        {
-            if(i+1>adultRepo.findAll().size()) break;
-            Adult a=adultRepo.findById(i).get();
-            rList.add(new AdultDTO(a.getName(),a.getAddress(),a.getAge()));
-        }
 
-        return rList;
-    }
-    public List<ChildDTO> gettenchildrenPREV()
-    {
-        List<ChildDTO> rList=new ArrayList<>();
-        startchild-=20;
-        if(startchild<0){startchild=0L; return null;}
-        for(Long i=startchild;i<startchild+10;i++)
-        {
-            if(i+1>childRepo.findAll().size()) break;
-            Child c=childRepo.findById(i).get();
-            rList.add(new ChildDTO(c.name,c.getAddress(),c.getFamily().getId()));
-        }
-
-        return rList;
-    }
     public void removeFamily(Long id)
     {
         familyRepo.deleteById(id);
-    }
-    public List<FamilyDTO> gettenfamiliesPREV()
-    {
-        List<FamilyDTO> rList=new ArrayList<>();
-        startfamily-=20;
-        if(startfamily<0){startfamily=0L; return null;}
-        for(Long i=startfamily;i<startfamily+10;i++)
-        {
-            if(i+1>familyRepo.findAll().size()) break;
-            Family c=familyRepo.findById(i).get();
-            rList.add(new FamilyDTO(c.getMom(),c.getDad(),c.getHomeAddress()));
-        }
-        return rList;
-    }
-    public List<Friend> gettenfriendsPREV()
-    {
-        List<Friend> rList=new ArrayList<>();
-        startfriend-=20;
-        if(startfriend<0){startfriend=0L; return null;}
-        for(Long i=startfriend;i<startfriend+10;i++)
-        {
-            if(i+1>friendRepo.findAll().size()) break;
-            Friend c=friendRepo.findById(i).get();
-            rList.add(c);
-        }
-        return rList;
     }
 
 
