@@ -7,6 +7,7 @@ import com.example.demo.Model.*;
 import com.example.demo.Repo.FriendRepo;
 import com.example.demo.Service.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.amqp.RabbitProperties;
 import org.springframework.web.bind.annotation.*;
 
 import javax.swing.plaf.nimbus.State;

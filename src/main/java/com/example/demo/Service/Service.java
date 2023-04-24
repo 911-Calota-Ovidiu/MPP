@@ -30,7 +30,7 @@ public class Service {
     {
         List<AdultDTO> rList=new ArrayList<>();
         List<Adult> alist=adultRepo.findAll();
-        int lim=50;
+        int lim=10;
         for(Adult a:alist)
         {
             if(lim>=0)
@@ -47,7 +47,7 @@ public class Service {
     {
         List<ChildDTO> rList=new ArrayList<>();
         List<Child> alist=childRepo.findAll();
-        int lim=50;
+        int lim=10;
         for(Child a:alist)
         {
             if(lim>=0)
@@ -64,7 +64,7 @@ public class Service {
     {
         List<FamilyDTO> rList=new ArrayList<>();
         List<Family> alist=familyRepo.findAll();
-        int lim=50;
+        int lim=10;
         for(Family a:alist)
         {
             if(lim>=0)
@@ -81,7 +81,7 @@ public class Service {
     {
         List<Friend> rList=new ArrayList<>();
         List<Friend> alist=friendRepo.findAll();
-        int lim=50;
+        int lim=10;
         for(Friend a:alist)
         {
             if(lim>=0)
