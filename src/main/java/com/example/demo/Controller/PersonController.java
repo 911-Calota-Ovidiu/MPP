@@ -28,6 +28,8 @@ public class PersonController {
 
     @GetMapping("/adult/{personId}")
     public Adult getAdultWithId(@PathVariable("personId") Long personId){
+        System.out.println("Got here");
+        System.out.println(personId);
         return service.getAdultID(personId);
     }
     @GetMapping("/child/avg")
@@ -84,40 +86,20 @@ public class PersonController {
 
     }
     @PutMapping("/adult/address")
-    public void updateAddress(@RequestBody Long id, @RequestBody String  newAd)
+    public void updateAddressAdult(@RequestBody Long id, @RequestBody String  newAd)
     {
         service.updateAdult(id,newAd);
     }
-
+    @PutMapping("/child/address")
+    public void updateAddressChild(@RequestBody Long id, @RequestBody String  newAd)
+    {
+        service.updateChild(id,newAd);
+    }
     @PostMapping("/family/child/{id}/{cid}")
     public void addChildToFam(@PathVariable("id") Long id,@PathVariable("cid") Long cid)
     {
         service.addChildToFamily(id,cid);
     }
-    @GetMapping("/adult/next")
-    public List<AdultDTO> getNextAdultPage()
-    {
-        return service.getAdultLimit();
-    }
-
-    @GetMapping("/child/next/page")
-    public List<ChildDTO> getNextChildPage()
-    {
-        return service.getChildrenLimit();
-    }
-
-    @GetMapping("/family/next")
-    public List<FamilyDTO> getNextFamilyPage()
-    {
-        return service.getFamilyLimit();
-    }
-
-    @GetMapping("/friend/next")
-    public List<Friend> getNextFriendPage()
-    {
-        return service.getFriendLimit();
-    }
-
     @DeleteMapping("/child/{id}")
     public void removeChild(@PathVariable("id") Long id){
         service.removeChild(id);

@@ -150,9 +150,9 @@ public class Service {
         friendRepo.deleteById(id);
     }
 
-    public void updateChild(Pair<Long, String> p) {
-        Child ad = childRepo.findById(p.first).get();
-        ad.setAddress(p.second);
+    public void updateChild(Long p, String s) {
+        Child ad = childRepo.findById(p).get();
+        ad.setAddress(s);
         childRepo.save(ad);
     }
 
