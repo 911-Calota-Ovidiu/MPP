@@ -9,6 +9,7 @@ import com.example.demo.Repo.FriendRepo;
 import com.example.demo.Model.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,22 +27,31 @@ public class Service {
     @Autowired
     FriendRepo friendRepo;
     Long startadult= 0L,startchild=0L,startfamily=0L,startfriend=0L;
+
     public List<AdultDTO> getAdultLimit()
     {
-        List<AdultDTO> rList=new ArrayList<>();
-        List<Adult> alist=adultRepo.findAll();
-        int lim=5;
-        for(Adult a:alist)
-        {
-            if(lim>=0)
-            {
-                AdultDTO adto=new AdultDTO(a.getName(),a.getAddress(),a.getAge());
-                rList.add(adto);
-                lim--;
-            }
-            else break;
-        }
-        return rList.stream().limit(5).collect(Collectors.toList());
+//        List<AdultDTO> rList=new ArrayList<>();
+//        List<Adult> alist=adultRepo.findAll();
+//        int lim=5;
+//        for(Adult a:alist)
+//        {
+//
+//            if(lim>=0)
+//            {
+//                AdultDTO adto=new AdultDTO(a.getName(),a.getAddress(),a.getAge());
+//                rList.add(adto);
+//                lim--;
+//            }
+//            else break;
+//        }
+//        return rList.stream().limit(5).collect(Collectors.toList());
+
+        return adultRepo.getListAdults().stream().limit(10)
+                .map(a -> new AdultDTO(
+                        (String) a[0],
+                        (String) a[1],
+                        (int) a[2]
+                )).collect(Collectors.toList());
     }
     public List<ChildDTO> getChildrenLimit()
     {
@@ -254,7 +264,16 @@ public class Service {
     public Adult getAdultID(Long id) {
         return adultRepo.findById(id).get();
     }
-
+    public int averageChildCount()
+    {
+        int count=0,nrfam=0;
+        for(Family f: familyRepo.findAll())
+        {
+            nrfam++;
+            count+=f.getNrOfMembers();
+        }
+        return count/nrfam;
+    }
     public int averageChildAge() {
         int age = 0, sum = 0;
         List<Child> children = childRepo.findAll();

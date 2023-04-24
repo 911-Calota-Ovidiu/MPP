@@ -115,4 +115,6 @@ public class PersonController {
     public void removeFriend(@PathVariable("id") Long id){
         service.removeFriend(id);
     }
+    @GetMapping("/family/avg")
+    public int getFamAvg(){return service.averageChildCount();}
 }
