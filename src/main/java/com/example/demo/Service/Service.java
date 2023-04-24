@@ -30,7 +30,7 @@ public class Service {
     {
         List<AdultDTO> rList=new ArrayList<>();
         List<Adult> alist=adultRepo.findAll();
-        int lim=10;
+        int lim=5;
         for(Adult a:alist)
         {
             if(lim>=0)
@@ -41,13 +41,13 @@ public class Service {
             }
             else break;
         }
-        return rList.stream().limit(10).collect(Collectors.toList());
+        return rList.stream().limit(5).collect(Collectors.toList());
     }
     public List<ChildDTO> getChildrenLimit()
     {
         List<ChildDTO> rList=new ArrayList<>();
         List<Child> alist=childRepo.findAll();
-        int lim=10;
+        int lim=5;
         for(Child a:alist)
         {
             if(lim>=0)
@@ -58,13 +58,13 @@ public class Service {
             }
             else break;
         }
-        return rList.stream().limit(10).collect(Collectors.toList());
+        return rList.stream().limit(5).collect(Collectors.toList());
     }
     public List<FamilyDTO> getFamilyLimit()
     {
         List<FamilyDTO> rList=new ArrayList<>();
         List<Family> alist=familyRepo.findAll();
-        int lim=10;
+        int lim=5;
         for(Family a:alist)
         {
             if(lim>=0)
@@ -75,13 +75,13 @@ public class Service {
             }
             else break;
         }
-        return rList.stream().limit(10).collect(Collectors.toList());
+        return rList.stream().limit(5).collect(Collectors.toList());
     }
     public List<Friend> getFriendLimit()
     {
         List<Friend> rList=new ArrayList<>();
         List<Friend> alist=friendRepo.findAll();
-        int lim=10;
+        int lim=5;
         for(Friend a:alist)
         {
             if(lim>=0)
@@ -91,7 +91,7 @@ public class Service {
             }
             else break;
         }
-        return rList.stream().limit(10).collect(Collectors.toList());
+        return rList.stream().limit(5).collect(Collectors.toList());
     }
 
 
