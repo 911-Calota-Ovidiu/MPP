@@ -41,7 +41,7 @@ public class Service {
             }
             else break;
         }
-        return rList.stream().limit(50).collect(Collectors.toList());
+        return rList.stream().limit(10).collect(Collectors.toList());
     }
     public List<ChildDTO> getChildrenLimit()
     {
@@ -58,7 +58,7 @@ public class Service {
             }
             else break;
         }
-        return rList.stream().limit(50).collect(Collectors.toList());
+        return rList.stream().limit(10).collect(Collectors.toList());
     }
     public List<FamilyDTO> getFamilyLimit()
     {
@@ -75,7 +75,7 @@ public class Service {
             }
             else break;
         }
-        return rList.stream().limit(50).collect(Collectors.toList());
+        return rList.stream().limit(10).collect(Collectors.toList());
     }
     public List<Friend> getFriendLimit()
     {
@@ -91,7 +91,7 @@ public class Service {
             }
             else break;
         }
-        return rList.stream().limit(50).collect(Collectors.toList());
+        return rList.stream().limit(10).collect(Collectors.toList());
     }
 
 
