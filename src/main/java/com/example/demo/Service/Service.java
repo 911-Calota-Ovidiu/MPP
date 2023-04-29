@@ -8,7 +8,13 @@ import com.example.demo.Repo.FamilyRepo;
 import com.example.demo.Repo.FriendRepo;
 import com.example.demo.Model.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.ArrayList;
@@ -27,81 +33,50 @@ public class Service {
     @Autowired
     FriendRepo friendRepo;
     Long startadult= 0L,startchild=0L,startfamily=0L,startfriend=0L;
+    @PersistenceContext
+    EntityManager entityManager;
+    public List<Adult> getAdultPage(int page)
+    {
 
-    public List<AdultDTO> getAdultLimit()
-    {
-//        List<AdultDTO> rList=new ArrayList<>();
-//        List<Adult> alist=adultRepo.findAll();
-//        int lim=5;
-//        for(Adult a:alist)
-//        {
-//
-//            if(lim>=0)
-//            {
-//                AdultDTO adto=new AdultDTO(a.getName(),a.getAddress(),a.getAge());
-//                rList.add(adto);
-//                lim--;
-//            }
-//            else break;
-//        }
-//        return rList.stream().limit(5).collect(Collectors.toList());
+        Pageable pageable= PageRequest.of(page,10,Sort.by("adultID"));
+        List<Adult> alist= adultRepo.findAll(pageable).getContent();
+        List<AdultDTO> retlist=new ArrayList<>();
+        for(Adult a: alist)
+        {
+            retlist.add(new AdultDTO(a.getName(),a.getAddress(),a.getAge()));
+        }
+        return alist;
+    }
 
-        return adultRepo.getListAdults().stream().limit(10)
-                .map(a -> new AdultDTO(
-                        (String) a[0],
-                        (String) a[1],
-                        (int) a[2]
-                )).collect(Collectors.toList());
-    }
-    public List<ChildDTO> getChildrenLimit()
+    public List<ChildDTO> getChildPage(int page)
     {
-        List<ChildDTO> rList=new ArrayList<>();
-        List<Child> alist=childRepo.findAll();
-        int lim=5;
-        for(Child a:alist)
+
+        Pageable pageable= PageRequest.of(page,10,Sort.by("childID"));
+        List<Child> alist= childRepo.findAll(pageable).getContent();
+        List<ChildDTO> retlist=new ArrayList<>();
+        for(Child a: alist)
         {
-            if(lim>=0)
-            {
-                ChildDTO adto=new ChildDTO(a.getName(),a.getAddress(),a.getFamily().getId());
-                rList.add(adto);
-                lim--;
-            }
-            else break;
+            retlist.add(new ChildDTO(a.name,a.getAddress(),a.getFamily().getId()));
         }
-        return rList.stream().limit(5).collect(Collectors.toList());
+        return retlist;
     }
-    public List<FamilyDTO> getFamilyLimit()
+    public List<FamilyDTO> getFamilyPage(int page)
     {
-        List<FamilyDTO> rList=new ArrayList<>();
-        List<Family> alist=familyRepo.findAll();
-        int lim=5;
-        for(Family a:alist)
+
+        Pageable pageable= PageRequest.of(page,10,Sort.by("famID"));
+        List<Family> alist= familyRepo.findAll(pageable).getContent();
+        List<FamilyDTO> retlist=new ArrayList<>();
+        for(Family a: alist)
         {
-            if(lim>=0)
-            {
-                FamilyDTO adto=new FamilyDTO(a.getMom(),a.getDad(),a.getHomeAddress());
-                rList.add(adto);
-                lim--;
-            }
-            else break;
+            retlist.add(new FamilyDTO(a.getMom(),a.getDad(),a.getHomeAddress()));
         }
-        return rList.stream().limit(5).collect(Collectors.toList());
+        return retlist;
     }
-    public List<Friend> getFriendLimit()
+    public List<Friend> getFriendPage(int page)
     {
-        List<Friend> rList=new ArrayList<>();
-        List<Friend> alist=friendRepo.findAll();
-        int lim=5;
-        for(Friend a:alist)
-        {
-            if(lim>=0)
-            {
-                rList.add(a);
-                lim--;
-            }
-            else break;
-        }
-        return rList.stream().limit(5).collect(Collectors.toList());
+
+        Pageable pageable= PageRequest.of(page,10,Sort.by("id"));
+        return friendRepo.findAll(pageable).getContent();
     }
 
 
@@ -274,13 +249,15 @@ public class Service {
         }
         return count/nrfam;
     }
-    public int averageChildAge() {
-        int age = 0, sum = 0;
+    public Double averageChildAge() {
+        /*int age = 0, sum = 0;
         List<Child> children = childRepo.findAll();
         for (Child c : children) {
             age += c.getAge();
             sum++;
-        }
-        return age / sum;
+        }*/
+
+        TypedQuery<Double> query = entityManager.createQuery("SELECT AVG(e.age) FROM Child e", Double.class);
+        return query.getSingleResult();
     }
 }
