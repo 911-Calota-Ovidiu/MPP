@@ -32,13 +32,12 @@ public class Service {
     FamilyRepo familyRepo;
     @Autowired
     FriendRepo friendRepo;
-    Long startadult= 0L,startchild=0L,startfamily=0L,startfriend=0L;
     @PersistenceContext
     EntityManager entityManager;
     public List<Adult> getAdultPage(int page)
     {
 
-        Pageable pageable= PageRequest.of(page,10,Sort.by("adultID"));
+        Pageable pageable= PageRequest.of(page,50,Sort.by("adultID"));
         List<Adult> alist= adultRepo.findAll(pageable).getContent();
         List<AdultDTO> retlist=new ArrayList<>();
         for(Adult a: alist)
@@ -51,7 +50,7 @@ public class Service {
     public List<ChildDTO> getChildPage(int page)
     {
 
-        Pageable pageable= PageRequest.of(page,10,Sort.by("childID"));
+        Pageable pageable= PageRequest.of(page,50,Sort.by("childID"));
         List<Child> alist= childRepo.findAll(pageable).getContent();
         List<ChildDTO> retlist=new ArrayList<>();
         for(Child a: alist)
@@ -63,7 +62,7 @@ public class Service {
     public List<FamilyDTO> getFamilyPage(int page)
     {
 
-        Pageable pageable= PageRequest.of(page,10,Sort.by("famID"));
+        Pageable pageable= PageRequest.of(page,50,Sort.by("famID"));
         List<Family> alist= familyRepo.findAll(pageable).getContent();
         List<FamilyDTO> retlist=new ArrayList<>();
         for(Family a: alist)
@@ -75,7 +74,7 @@ public class Service {
     public List<Friend> getFriendPage(int page)
     {
 
-        Pageable pageable= PageRequest.of(page,10,Sort.by("id"));
+        Pageable pageable= PageRequest.of(page,50,Sort.by("id"));
         return friendRepo.findAll(pageable).getContent();
     }
 
