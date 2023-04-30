@@ -97,9 +97,13 @@ public class Service {
         adultRepo.deleteById(id);
     }
 
-    public void updateAdult(Long id, String newAd) {
+    public void updateAdult(Long id, Adult adN) {
         Adult ad = adultRepo.findById(id).get();
-        ad.setAddress(newAd);
+        ad.setAddress(adN.getAddress());
+        ad.setAge(adN.getAge());
+        ad.setAname(adN.getAname());
+        ad.setBirthdate(adN.getBirthdate());
+        ad.setEyeColor(adN.getEyeColor());
         adultRepo.save(ad);
     }
 
@@ -258,5 +262,19 @@ public class Service {
 
         TypedQuery<Double> query = entityManager.createQuery("SELECT AVG(e.age) FROM Child e", Double.class);
         return query.getSingleResult();
+    }
+    public Long countAdults()
+    {
+        TypedQuery<Long> query = entityManager.createQuery("SELECT Count(*) FROM Adult e", Long.class);
+        return query.getSingleResult();
+
+    }
+
+    public List<Adult> testAddAdult()
+    {
+        TypedQuery<Adult> query = entityManager.createQuery("SELECT e FROM Adult e WHERE e.age=99999", Adult.class);
+        System.out.println(query.getResultList().size());
+        return query.getResultList();
+
     }
 }

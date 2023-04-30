@@ -49,10 +49,21 @@ public class PersonController {
 
     }
 
-    @PutMapping("/adult/address")
-    public void updateAddressAdult(@RequestBody Long id, @RequestBody String newAd) {
-        service.updateAdult(id, newAd);
+    @PutMapping("/adult/{id}")
+    public void updateAddressAdult(@PathVariable Long id, @RequestBody Adult ad) {
+        service.updateAdult(id, ad);
     }
+    @GetMapping("/adult/count")
+    public Long countAdults()
+    {
+        return service.countAdults();
+    }
+    @GetMapping("/adult/test/add")
+    public List<Adult> testAdd()
+    {
+        return service.testAddAdult();
+    }
+
 
 
     // CHILD REQUESTS
@@ -154,6 +165,10 @@ public class PersonController {
     public void removeFriend(@PathVariable("id") Long id) {
         service.removeFriend(id);
     }
+
+
+
+
     @RequestMapping("/")
     public String mainpage()
     {
