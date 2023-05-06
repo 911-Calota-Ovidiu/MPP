@@ -17,7 +17,7 @@ import org.hibernate.annotations.OnDeleteAction;
 @Table(name="Children")
 public class Child  implements  Person{
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long childID;
     @Column(name="name")
     public String name;

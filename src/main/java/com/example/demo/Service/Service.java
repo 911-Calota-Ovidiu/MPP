@@ -12,6 +12,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -38,38 +39,26 @@ public class Service {
     {
 
         Pageable pageable= PageRequest.of(page,50,Sort.by("adultID"));
-        List<Adult> alist= adultRepo.findAll(pageable).getContent();
-        List<AdultDTO> retlist=new ArrayList<>();
-        for(Adult a: alist)
-        {
-            retlist.add(new AdultDTO(a.getName(),a.getAddress(),a.getAge()));
-        }
-        return alist;
+        return adultRepo.findAll(pageable).getContent();
     }
 
-    public List<ChildDTO> getChildPage(int page)
+    public List<Child> getChildPage(int page)
     {
 
         Pageable pageable= PageRequest.of(page,50,Sort.by("childID"));
-        List<Child> alist= childRepo.findAll(pageable).getContent();
-        List<ChildDTO> retlist=new ArrayList<>();
-        for(Child a: alist)
-        {
-            retlist.add(new ChildDTO(a.name,a.getAddress(),a.getFamily().getId()));
-        }
-        return retlist;
+        return childRepo.findAll(pageable).getContent();
     }
-    public List<FamilyDTO> getFamilyPage(int page)
+    public List<Family> getFamilyPage(int page)
     {
 
-        Pageable pageable= PageRequest.of(page,50,Sort.by("famID"));
+        Pageable pageable= PageRequest.of(page,10,Sort.by("famID"));
         List<Family> alist= familyRepo.findAll(pageable).getContent();
         List<FamilyDTO> retlist=new ArrayList<>();
         for(Family a: alist)
         {
             retlist.add(new FamilyDTO(a.getMom(),a.getDad(),a.getHomeAddress()));
         }
-        return retlist;
+        return alist;
     }
     public List<Friend> getFriendPage(int page)
     {
@@ -120,7 +109,16 @@ public class Service {
         }
         return returnList;
     }
+    public void updateFamily(Long id, Family family)
+    {
+        Family f=familyRepo.findById(id).get();
+        f.setDad(family.getDad());
+        f.setMom(family.getMom());
+        f.setHomeAddress(family.getHomeAddress());
+        f.setNrOfMembers(family.getNrOfMembers());
+        familyRepo.save(f);
 
+    }
     public void addChild(Child a, Long famid) {
         Family f = familyRepo.findById(famid).get();
         a.setFamily(f);
@@ -138,9 +136,15 @@ public class Service {
         friendRepo.deleteById(id);
     }
 
-    public void updateChild(Long p, String s) {
+    public void updateChild(Long p, Child s,Long famid) {
         Child ad = childRepo.findById(p).get();
-        ad.setAddress(s);
+        Family f= familyRepo.findById(famid).get();
+        ad.setFamily(f);
+        ad.setName(s.name);
+        ad.setAge(s.getAge());
+        ad.setAddress(s.getAddress());
+        ad.setBirthdate(s.getBirthdate());
+        ad.setEyeColor(s.getEyeColor());
         childRepo.save(ad);
     }
 
@@ -148,6 +152,7 @@ public class Service {
         Family f = familyRepo.findById(id).get();
         Child c = childRepo.findById(cid).get();
         f.addChild(c);
+        f.setNrOfMembers(f.getChildren().size()+2);
         familyRepo.save(f);
     }
 
@@ -269,7 +274,40 @@ public class Service {
         return query.getSingleResult();
 
     }
+    public Long countAdultsAge(int age)
+    {
+        TypedQuery<Long> query = entityManager.createQuery("SELECT Count(*) FROM Adult e where e.age=:age", Long.class);
+        query.setParameter("age",age);
+        return query.getSingleResult();
 
+    }
+    public Long countChildren()
+    {
+        TypedQuery<Long> query = entityManager.createQuery("SELECT Count(*) FROM Child e", Long.class);
+        return query.getSingleResult();
+
+    }
+    public Long countFamilies()
+    {
+        TypedQuery<Long> query = entityManager.createQuery("SELECT Count(*) FROM Family e", Long.class);
+        return query.getSingleResult();
+
+    }
+    public Long countFriends()
+    {
+        TypedQuery<Long> query = entityManager.createQuery("SELECT Count(*) FROM Friend e", Long.class);
+        return query.getSingleResult();
+
+    }
+    public Friend getOneFriend(Long id)
+    {
+        return friendRepo.findById(id).get();
+    }
+    public List<Adult> getAdultsByAge(int age,int page)
+    {
+        Pageable pageable = PageRequest.of(page, 50, Sort.by("adultID"));
+        return adultRepo.findByAge(age, pageable);
+    }
     public List<Adult> testAddAdult()
     {
         TypedQuery<Adult> query = entityManager.createQuery("SELECT e FROM Adult e WHERE e.age=99999", Adult.class);

@@ -1,5 +1,7 @@
 package com.example.demo.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,7 +19,7 @@ import java.util.List;
 @Table(name="Family")
 public class Family{
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long famID;
     @Column(name="nrofmembers")
     int nrOfMembers;
@@ -25,6 +27,7 @@ public class Family{
     Long mom;
     @Column(name="dad")
     Long dad;
+    @JsonSerialize
     @OneToMany(mappedBy = "family", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
     List<Child> children=new ArrayList<>();
