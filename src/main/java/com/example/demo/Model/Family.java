@@ -2,7 +2,7 @@ package com.example.demo.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -34,6 +34,11 @@ public class Family{
     @Column(name="address")
     String homeAddress;
 
+
+    @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "user_id")//, nullable = true), nullable = false)
+    private User user;
     public Long getId() {
         return famID;
     }

@@ -1,20 +1,23 @@
 package com.example.demo.Configuration;
 
-import jakarta.servlet.*;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.*;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletRequest;
+
 import java.io.IOException;
+import java.util.logging.Filter;
+import java.util.logging.LogRecord;
 
 
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class CORSConfig implements Filter {
-    @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
         final HttpServletResponse response = (HttpServletResponse) res;
         response.setHeader("Access-Control-Allow-Origin", "*");
@@ -30,11 +33,14 @@ public class CORSConfig implements Filter {
         }
     }
 
-    @Override
     public void destroy() {
     }
 
-    @Override
     public void init(FilterConfig config) throws ServletException {
+    }
+
+    @Override
+    public boolean isLoggable(LogRecord record) {
+        return false;
     }
 }

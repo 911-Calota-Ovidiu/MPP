@@ -2,24 +2,36 @@ package com.example.demo.Controller;
 
 import com.example.demo.Repo.*;
 import com.example.demo.Model.*;
+import com.example.demo.Security.JWT.JwtUtils;
 import com.example.demo.Service.*;
 import com.example.demo.Model.*;
 import com.example.demo.Repo.FriendRepo;
 import com.example.demo.Service.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.amqp.RabbitProperties;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.swing.plaf.nimbus.State;
 import java.sql.*;
 import java.util.List;
 
+@CrossOrigin(origins = {"http://localhost:4200", "https://main--superb-cupcake-f2ff38.netlify.app/"}, allowCredentials = "true")
 @RestController
+@RequestMapping("/api")
+@Validated
 public class PersonController {
+
     @Autowired
     private Service service;
+    private final UserService userService;
 
-    Connection con = null;
+    private final JwtUtils jwtUtils;
+
+    public PersonController(UserService userService,JwtUtils jwtUtils) {
+        this.userService=userService;
+        this.jwtUtils=jwtUtils;
+    }
 
 
     // ADULT REQUESTS
@@ -34,8 +46,10 @@ public class PersonController {
     }
 
     @PostMapping("/adult")
-    public void addPerson(@RequestBody Adult p) {
-        service.addAdult(p);
+    public void addPerson(@RequestBody Adult p,@RequestHeader("Authorization") String token) {
+        String username = this.jwtUtils.getUserNameFromJwtToken(token);
+        User user = this.userService.getUserByUsername(username);
+        service.addAdult(p,user.getId());
     }
 
     @PostMapping("/adult/mass")
@@ -44,25 +58,25 @@ public class PersonController {
     }
 
     @DeleteMapping("/adult/{id}")
-    public void removePerson(@PathVariable("id") Long id) {
-        service.removeAdult(id);
+    public void removePerson(@PathVariable("id") Long id,@RequestHeader("Authorization") String token) {
+        String username = this.jwtUtils.getUserNameFromJwtToken(token);
+        User user = this.userService.getUserByUsername(username);
+        service.removeAdult(id,user.getId());
 
     }
 
     @PutMapping("/adult/{id}")
-    public void updateAddressAdult(@PathVariable Long id, @RequestBody Adult ad) {
-        service.updateAdult(id, ad);
+    public void updateAddressAdult(@PathVariable Long id, @RequestBody Adult ad,@RequestHeader("Authorization") String token) {
+        String username = this.jwtUtils.getUserNameFromJwtToken(token);
+        User user = this.userService.getUserByUsername(username);
+        service.updateAdult(id, ad,user.getId());
     }
     @GetMapping("/adult/count")
     public Long countAdults()
     {
         return service.countAdults();
     }
-    @GetMapping("/adult/test/add")
-    public List<Adult> testAdd()
-    {
-        return service.testAddAdult();
-    }
+
     @GetMapping("/adult/age/{age}/page/{page}")
     public List<Adult> getAdultsByAge(@PathVariable int age, @PathVariable int page)
     {
@@ -87,17 +101,12 @@ public class PersonController {
     }
 
     @PostMapping("/child/{famid}/family")
-    public void addChild(@RequestBody Child c, @PathVariable Long famid) {
-
-        service.addChild(c, famid);
+    public void addChild(@RequestBody Child c, @PathVariable Long famid,@RequestHeader("Authorization") String token) {
+        String username = this.jwtUtils.getUserNameFromJwtToken(token);
+        User user = this.userService.getUserByUsername(username);
+        service.addChild(c, famid,user.getId());
     }
 
-    @PostMapping("/child/mass/{famid}")
-    public void addChildren(@RequestBody List<Child> c, @PathVariable Long famid) throws SQLException, ClassNotFoundException {
-        for (Child ch : c) {
-            service.addChild(ch, famid);
-        }
-    }
 
     @GetMapping("/child/{id}")
     public Child getChildWithID(@PathVariable("id") Long id) {
@@ -105,13 +114,17 @@ public class PersonController {
     }
 
     @PutMapping("/child/{id}/{famID}")
-    public void updateAddressChild(@PathVariable Long id, @RequestBody Child newchild,@PathVariable Long famID) {
-        service.updateChild(id, newchild,famID);
+    public void updateAddressChild(@PathVariable Long id, @RequestBody Child newchild,@PathVariable Long famID,@RequestHeader("Authorization") String token) {
+        String username = this.jwtUtils.getUserNameFromJwtToken(token);
+        User user = this.userService.getUserByUsername(username);
+        service.updateChild(id, newchild,famID,user.getId());
     }
 
     @DeleteMapping("/child/{id}")
-    public void removeChild(@PathVariable("id") Long id) {
-        service.removeChild(id);
+    public void removeChild(@PathVariable("id") Long id,@RequestHeader("Authorization") String token) {
+        String username = this.jwtUtils.getUserNameFromJwtToken(token);
+        User user = this.userService.getUserByUsername(username);
+        service.removeChild(id,user.getId());
     }
 
     @GetMapping("/child/count")
@@ -124,8 +137,10 @@ public class PersonController {
 
     // FAMILY REQUESTS
     @PostMapping("/family")
-    public void addFamily(@RequestBody Family family) throws SQLException, ClassNotFoundException {
-        service.addFamily(family);
+    public void addFamily(@RequestBody Family family,@RequestHeader("Authorization") String token) throws SQLException, ClassNotFoundException {
+        String username = this.jwtUtils.getUserNameFromJwtToken(token);
+        User user = this.userService.getUserByUsername(username);
+        service.addFamily(family,user.getId());
     }
 
     @PostMapping("/family/mass")
@@ -150,13 +165,17 @@ public class PersonController {
     }
 
     @PostMapping("/family/child/{id}/{cid}")
-    public void addChildToFam(@PathVariable("id") Long id, @PathVariable("cid") Long cid) {
-        service.addChildToFamily(id, cid);
+    public void addChildToFam(@PathVariable("id") Long id, @PathVariable("cid") Long cid,@RequestHeader("Authorization") String token) {
+        String username = this.jwtUtils.getUserNameFromJwtToken(token);
+        User user = this.userService.getUserByUsername(username);
+        service.addChildToFamily(id, cid,user.getId());
     }
 
     @DeleteMapping("/family/{id}")
-    public void removeFamily(@PathVariable("id") Long id) {
-        service.removeFamily(id);
+    public void removeFamily(@PathVariable("id") Long id,@RequestHeader("Authorization") String token) {
+        String username = this.jwtUtils.getUserNameFromJwtToken(token);
+        User user = this.userService.getUserByUsername(username);
+        service.removeFamily(id,user.getId());
     }
 
 
@@ -171,8 +190,10 @@ public class PersonController {
         return service.countFamilies();
     }
     @PutMapping("/family/{id}")
-    public void updateFamily(@RequestBody Family family,@PathVariable Long id){
-        service.updateFamily(id,family);
+    public void updateFamily(@RequestBody Family family,@PathVariable Long id,@RequestHeader("Authorization") String token){
+        String username = this.jwtUtils.getUserNameFromJwtToken(token);
+        User user = this.userService.getUserByUsername(username);
+        service.updateFamily(id,family,user.getId());
     }
 
 
@@ -184,13 +205,17 @@ public class PersonController {
     }
 
     @PostMapping("/friends/{p1}/{p2}")
-    public void addFriends(@PathVariable Long p1, @PathVariable Long p2) {
-        service.addFriend(p1, p2);
+    public void addFriends(@PathVariable Long p1, @PathVariable Long p2,@RequestHeader("Authorization") String token) {
+        String username = this.jwtUtils.getUserNameFromJwtToken(token);
+        User user = this.userService.getUserByUsername(username);
+        service.addFriend(p1, p2,user.getId());
     }
 
     @DeleteMapping("/friends/{id}")
-    public void removeFriend(@PathVariable Long id) {
-        service.removeFriend(id);
+    public void removeFriend(@PathVariable Long id,@RequestHeader("Authorization") String token) {
+        String username = this.jwtUtils.getUserNameFromJwtToken(token);
+        User user = this.userService.getUserByUsername(username);
+        service.removeFriend(id,user.getId());
     }
 
     @GetMapping("/friends/count")

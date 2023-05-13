@@ -1,7 +1,7 @@
 package com.example.demo.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -36,6 +36,10 @@ public class Friend {
     @JsonIgnore
     private Child c2;
 
+    @OneToOne
+    @JsonIgnore
+    @JoinColumn(name = "user_id")//, nullable = true), nullable = false)
+    private User user;
     public Child getFriends() {
         return c2;
     }

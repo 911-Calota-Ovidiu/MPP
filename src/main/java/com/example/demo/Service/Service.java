@@ -1,28 +1,21 @@
 
 package com.example.demo.Service;
 
+import com.example.demo.Exception.UserNotAuthorizedException;
+import com.example.demo.Exception.UserNotFoundException;
 import com.example.demo.Model.*;
-import com.example.demo.Repo.AdultRepo;
-import com.example.demo.Repo.ChildRepo;
-import com.example.demo.Repo.FamilyRepo;
-import com.example.demo.Repo.FriendRepo;
-import com.example.demo.Model.*;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.example.demo.Repo.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.List;
-import java.util.stream.Collectors;
-
 @org.springframework.stereotype.Service
 public class Service {
     @Autowired
@@ -33,8 +26,13 @@ public class Service {
     FamilyRepo familyRepo;
     @Autowired
     FriendRepo friendRepo;
-    @PersistenceContext
-    EntityManager entityManager;
+
+    @Autowired
+    UserRepository userRepository;
+
+
+
+
     public List<Adult> getAdultPage(int page)
     {
 
@@ -68,25 +66,63 @@ public class Service {
     }
 
 
-    public void removeFamily(Long id)
+    public void removeFamily(Long id,Long userid)
     {
+        User user=userRepository.findById(userid).orElseThrow(() -> new UserNotFoundException(userid));
+        boolean userOrModOrAdmin = user.getRoles().stream().anyMatch((role) ->
+                role.getName() == ERole.ROLE_ADMIN
+                        || role.getName() == ERole.ROLE_MODERATOR
+                        || role.getName() == ERole.ROLE_USER
+        );
+        if (!userOrModOrAdmin) {
+            throw new UserNotAuthorizedException(String.format(user.getUsername()));
+        }
         familyRepo.deleteById(id);
     }
 
 
-    public void addAdult(Adult a) {
+    public void addAdult(Adult a,Long id) {
+        User user=userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+        a.setUser(user);
+        boolean userOrModOrAdmin = user.getRoles().stream().anyMatch((role) ->
+                role.getName() == ERole.ROLE_ADMIN
+                        || role.getName() == ERole.ROLE_MODERATOR
+                        || role.getName() == ERole.ROLE_USER
+        );
+        if (!userOrModOrAdmin) {
+            throw new UserNotAuthorizedException(String.format(user.getUsername()));
+        }
         adultRepo.save(a);
+
     }
 
     public void addAdult(List<Adult> a) {
         adultRepo.saveAll(a);
     }
 
-    public void removeAdult(Long id) {
+    public void removeAdult(Long id,Long userid) {
+        User user=userRepository.findById(userid).orElseThrow(() -> new UserNotFoundException(userid));
+        boolean userOrModOrAdmin = user.getRoles().stream().anyMatch((role) ->
+                role.getName() == ERole.ROLE_ADMIN
+                        || role.getName() == ERole.ROLE_MODERATOR
+                        || role.getName() == ERole.ROLE_USER
+        );
+        if (!userOrModOrAdmin) {
+            throw new UserNotAuthorizedException(String.format(user.getUsername()));
+        }
         adultRepo.deleteById(id);
     }
 
-    public void updateAdult(Long id, Adult adN) {
+    public void updateAdult(Long id, Adult adN,Long userid) {
+        User user=userRepository.findById(userid).orElseThrow(() -> new UserNotFoundException(userid));
+        boolean userOrModOrAdmin = user.getRoles().stream().anyMatch((role) ->
+                role.getName() == ERole.ROLE_ADMIN
+                        || role.getName() == ERole.ROLE_MODERATOR
+                        || role.getName() == ERole.ROLE_USER
+        );
+        if (!userOrModOrAdmin) {
+            throw new UserNotAuthorizedException(String.format(user.getUsername()));
+        }
         Adult ad = adultRepo.findById(id).get();
         ad.setAddress(adN.getAddress());
         ad.setAge(adN.getAge());
@@ -94,10 +130,6 @@ public class Service {
         ad.setBirthdate(adN.getBirthdate());
         ad.setEyeColor(adN.getEyeColor());
         adultRepo.save(ad);
-    }
-
-    public AdultRepo getAdults() {
-        return adultRepo;
     }
 
     public List<Family> getFamiliesNR(Integer nr) {
@@ -109,8 +141,17 @@ public class Service {
         }
         return returnList;
     }
-    public void updateFamily(Long id, Family family)
+    public void updateFamily(Long id, Family family,Long userid)
     {
+        User user=userRepository.findById(userid).orElseThrow(() -> new UserNotFoundException(userid));
+        boolean userOrModOrAdmin = user.getRoles().stream().anyMatch((role) ->
+                role.getName() == ERole.ROLE_ADMIN
+                        || role.getName() == ERole.ROLE_MODERATOR
+                        || role.getName() == ERole.ROLE_USER
+        );
+        if (!userOrModOrAdmin) {
+            throw new UserNotAuthorizedException(String.format(user.getUsername()));
+        }
         Family f=familyRepo.findById(id).get();
         f.setDad(family.getDad());
         f.setMom(family.getMom());
@@ -119,9 +160,19 @@ public class Service {
         familyRepo.save(f);
 
     }
-    public void addChild(Child a, Long famid) {
+    public void addChild(Child a, Long famid,Long userid) {
+        User user=userRepository.findById(userid).orElseThrow(() -> new UserNotFoundException(userid));
+        boolean userOrModOrAdmin = user.getRoles().stream().anyMatch((role) ->
+                role.getName() == ERole.ROLE_ADMIN
+                        || role.getName() == ERole.ROLE_MODERATOR
+                        || role.getName() == ERole.ROLE_USER
+        );
+        if (!userOrModOrAdmin) {
+            throw new UserNotAuthorizedException(String.format(user.getUsername()));
+        }
         Family f = familyRepo.findById(famid).get();
         a.setFamily(f);
+        a.setUser(user);
         childRepo.save(a);
 
     }
@@ -131,12 +182,30 @@ public class Service {
 
     }
 
-    public void removeChild(Long id) {
+    public void removeChild(Long id,Long userid) {
+        User user=userRepository.findById(userid).orElseThrow(() -> new UserNotFoundException(userid));
+        boolean userOrModOrAdmin = user.getRoles().stream().anyMatch((role) ->
+                role.getName() == ERole.ROLE_ADMIN
+                        || role.getName() == ERole.ROLE_MODERATOR
+                        || role.getName() == ERole.ROLE_USER
+        );
+        if (!userOrModOrAdmin) {
+            throw new UserNotAuthorizedException(String.format(user.getUsername()));
+        }
         childRepo.deleteById(id);
         friendRepo.deleteById(id);
     }
 
-    public void updateChild(Long p, Child s,Long famid) {
+    public void updateChild(Long p, Child s,Long famid,Long userid) {
+        User user=userRepository.findById(userid).orElseThrow(() -> new UserNotFoundException(userid));
+        boolean userOrModOrAdmin = user.getRoles().stream().anyMatch((role) ->
+                role.getName() == ERole.ROLE_ADMIN
+                        || role.getName() == ERole.ROLE_MODERATOR
+                        || role.getName() == ERole.ROLE_USER
+        );
+        if (!userOrModOrAdmin) {
+            throw new UserNotAuthorizedException(String.format(user.getUsername()));
+        }
         Child ad = childRepo.findById(p).get();
         Family f= familyRepo.findById(famid).get();
         ad.setFamily(f);
@@ -148,7 +217,16 @@ public class Service {
         childRepo.save(ad);
     }
 
-    public void addChildToFamily(Long id, Long cid) {
+    public void addChildToFamily(Long id, Long cid,Long userid) {
+        User user=userRepository.findById(userid).orElseThrow(() -> new UserNotFoundException(userid));
+        boolean userOrModOrAdmin = user.getRoles().stream().anyMatch((role) ->
+                role.getName() == ERole.ROLE_ADMIN
+                        || role.getName() == ERole.ROLE_MODERATOR
+                        || role.getName() == ERole.ROLE_USER
+        );
+        if (!userOrModOrAdmin) {
+            throw new UserNotAuthorizedException(String.format(user.getUsername()));
+        }
         Family f = familyRepo.findById(id).get();
         Child c = childRepo.findById(cid).get();
         f.addChild(c);
@@ -181,8 +259,17 @@ public class Service {
         }
         return returnList;
     }
-    public void removeFriend(Long id)
+    public void removeFriend(Long id,Long userid)
     {
+        User user=userRepository.findById(userid).orElseThrow(() -> new UserNotFoundException(userid));
+        boolean userOrModOrAdmin = user.getRoles().stream().anyMatch((role) ->
+                role.getName() == ERole.ROLE_ADMIN
+                        || role.getName() == ERole.ROLE_MODERATOR
+                        || role.getName() == ERole.ROLE_USER
+        );
+        if (!userOrModOrAdmin) {
+            throw new UserNotAuthorizedException(String.format(user.getUsername()));
+        }
         friendRepo.deleteById(id);
     }
     public Adult getAdultWithID(Long id) {
@@ -211,12 +298,22 @@ public class Service {
     }
 
 
-    public void addFriend(Long id1, Long id2) {
+    public void addFriend(Long id1, Long id2, Long userid) {
+        User user=userRepository.findById(userid).orElseThrow(() -> new UserNotFoundException(userid));
+        boolean userOrModOrAdmin = user.getRoles().stream().anyMatch((role) ->
+                role.getName() == ERole.ROLE_ADMIN
+                        || role.getName() == ERole.ROLE_MODERATOR
+                        || role.getName() == ERole.ROLE_USER
+        );
+        if (!userOrModOrAdmin) {
+            throw new UserNotAuthorizedException(String.format(user.getUsername()));
+        }
         Child c = childRepo.findById(id1).get();
         Child c1 = childRepo.findById(id2).get();
         Friend f = new Friend();
         f.setC1(c);
         f.setC2(c1);
+        f.setUser(user);
         friendRepo.save(f);
     }
 
@@ -232,7 +329,17 @@ public class Service {
     }
 
 
-    public void addFamily(Family a) {
+    public void addFamily(Family a,Long userid) {
+        User user=userRepository.findById(userid).orElseThrow(() -> new UserNotFoundException(userid));
+        boolean userOrModOrAdmin = user.getRoles().stream().anyMatch((role) ->
+                role.getName() == ERole.ROLE_ADMIN
+                        || role.getName() == ERole.ROLE_MODERATOR
+                        || role.getName() == ERole.ROLE_USER
+        );
+        if (!userOrModOrAdmin) {
+            throw new UserNotAuthorizedException(String.format(user.getUsername()));
+        }
+        a.setUser(user);
         familyRepo.save(a);
     }
 
@@ -264,40 +371,32 @@ public class Service {
             age += c.getAge();
             sum++;
         }*/
-
-        TypedQuery<Double> query = entityManager.createQuery("SELECT AVG(e.age) FROM Child e", Double.class);
-        return query.getSingleResult();
+        return childRepo.averageChildAge();
     }
     public Long countAdults()
     {
-        TypedQuery<Long> query = entityManager.createQuery("SELECT Count(*) FROM Adult e", Long.class);
-        return query.getSingleResult();
+
+        return adultRepo.count();
 
     }
     public Long countAdultsAge(int age)
     {
-        TypedQuery<Long> query = entityManager.createQuery("SELECT Count(*) FROM Adult e where e.age=:age", Long.class);
-        query.setParameter("age",age);
-        return query.getSingleResult();
+        return (long) adultRepo.getAdultsByAge(age).size();
 
     }
     public Long countChildren()
     {
-        TypedQuery<Long> query = entityManager.createQuery("SELECT Count(*) FROM Child e", Long.class);
-        return query.getSingleResult();
+        return childRepo.count();
 
     }
     public Long countFamilies()
     {
-        TypedQuery<Long> query = entityManager.createQuery("SELECT Count(*) FROM Family e", Long.class);
-        return query.getSingleResult();
+        return familyRepo.count();
 
     }
     public Long countFriends()
     {
-        TypedQuery<Long> query = entityManager.createQuery("SELECT Count(*) FROM Friend e", Long.class);
-        return query.getSingleResult();
-
+        return friendRepo.count();
     }
     public Friend getOneFriend(Long id)
     {
@@ -307,12 +406,5 @@ public class Service {
     {
         Pageable pageable = PageRequest.of(page, 50, Sort.by("adultID"));
         return adultRepo.findByAge(age, pageable);
-    }
-    public List<Adult> testAddAdult()
-    {
-        TypedQuery<Adult> query = entityManager.createQuery("SELECT e FROM Adult e WHERE e.age=99999", Adult.class);
-        System.out.println(query.getResultList().size());
-        return query.getResultList();
-
     }
 }

@@ -1,7 +1,7 @@
 package com.example.demo.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,6 +29,11 @@ public class Child  implements  Person{
     String birthdate;
     @Column(name="age")
     public Integer age;
+
+    @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "user_id")//, nullable = true), nullable = false)
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "famID")

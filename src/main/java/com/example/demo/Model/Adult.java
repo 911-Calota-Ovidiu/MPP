@@ -1,6 +1,7 @@
 package com.example.demo.Model;
 
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,6 +27,11 @@ public class Adult implements Person{
     String birthdate;
     @Column(name="age")
     public Integer age;
+
+    @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "user_id")//, nullable = true)
+    private User user;
 
     public String getName() {
         return aname;
