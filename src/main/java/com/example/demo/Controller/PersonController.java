@@ -17,7 +17,7 @@ import javax.swing.plaf.nimbus.State;
 import java.sql.*;
 import java.util.List;
 
-@CrossOrigin(origins = {"http://localhost:4200", "https://main--mppateveryone.netlify.app/"}, allowCredentials = "true")
+@CrossOrigin(origins = {"http://localhost:4200", "https://mppateveryone.netlify.app/"}, allowCredentials = "true")
 @RestController
 @RequestMapping("/api")
 @Validated

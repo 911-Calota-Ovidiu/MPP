@@ -34,7 +34,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 
-@CrossOrigin(allowCredentials = "true", origins = {"http://localhost:4200", "https://main--mppateveryone.netlify.app/"})
+@CrossOrigin(allowCredentials = "true", origins = {"http://localhost:4200", "https://mpporiginal.mooo.com"})
 @RestController
 @RequestMapping("/api/auth")
 @Validated
