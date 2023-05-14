@@ -11,7 +11,7 @@ import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 
-@CrossOrigin(allowCredentials = "true", origins = {"http://localhost:4200", "https://superb-cupcake-f2ff38.netlify.app"})
+@CrossOrigin(allowCredentials = "true", origins = {"http://localhost:4200", "https://main--mppateveryone.netlify.app/"})
 @RestController
 @RequestMapping("/api")
 @Validated
