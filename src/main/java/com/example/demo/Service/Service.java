@@ -16,6 +16,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 @org.springframework.stereotype.Service
 public class Service {
     @Autowired
@@ -30,26 +32,26 @@ public class Service {
     @Autowired
     UserRepository userRepository;
 
-
+    int entitiesPerPage=50;
 
 
     public List<Adult> getAdultPage(int page)
     {
 
-        Pageable pageable= PageRequest.of(page,50,Sort.by("adultID"));
+        Pageable pageable= PageRequest.of(page,entitiesPerPage,Sort.by("adultID"));
         return adultRepo.findAll(pageable).getContent();
     }
 
     public List<Child> getChildPage(int page)
     {
 
-        Pageable pageable= PageRequest.of(page,50,Sort.by("childID"));
+        Pageable pageable= PageRequest.of(page,entitiesPerPage,Sort.by("childID"));
         return childRepo.findAll(pageable).getContent();
     }
     public List<Family> getFamilyPage(int page)
     {
 
-        Pageable pageable= PageRequest.of(page,10,Sort.by("famID"));
+        Pageable pageable= PageRequest.of(page,entitiesPerPage,Sort.by("famID"));
         List<Family> alist= familyRepo.findAll(pageable).getContent();
         List<FamilyDTO> retlist=new ArrayList<>();
         for(Family a: alist)
@@ -61,7 +63,7 @@ public class Service {
     public List<Friend> getFriendPage(int page)
     {
 
-        Pageable pageable= PageRequest.of(page,50,Sort.by("id"));
+        Pageable pageable= PageRequest.of(page,entitiesPerPage,Sort.by("id"));
         return friendRepo.findAll(pageable).getContent();
     }
 
@@ -107,7 +109,9 @@ public class Service {
                         || role.getName() == ERole.ROLE_MODERATOR
                         || role.getName() == ERole.ROLE_USER
         );
-        if (!userOrModOrAdmin) {
+        User addedBy=adultRepo.findById(id).get().getUser();
+
+        if (!userOrModOrAdmin&& !Objects.equals(addedBy.getId(), userid)) {
             throw new UserNotAuthorizedException(String.format(user.getUsername()));
         }
         adultRepo.deleteById(id);
@@ -404,7 +408,15 @@ public class Service {
     }
     public List<Adult> getAdultsByAge(int age,int page)
     {
-        Pageable pageable = PageRequest.of(page, 50, Sort.by("adultID"));
+        Pageable pageable = PageRequest.of(page, entitiesPerPage, Sort.by("adultID"));
         return adultRepo.findByAge(age, pageable);
+    }
+    public void setPageSize(int ent)
+    {
+        this.entitiesPerPage=ent;
+    }
+    public int getPageSize()
+    {
+        return entitiesPerPage;
     }
 }

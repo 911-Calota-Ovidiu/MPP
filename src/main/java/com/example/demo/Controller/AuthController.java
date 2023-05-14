@@ -144,7 +144,7 @@ public class AuthController {
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
-
+        System.out.println(userDetails.getId());
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new UserInfoResponse(userDetails.getId(),

@@ -9,6 +9,7 @@ import com.example.demo.Repo.FriendRepo;
 import com.example.demo.Service.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.amqp.RabbitProperties;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -231,5 +232,21 @@ public class PersonController {
     public String mainpage()
     {
         return "Works?!?!?!";
+    }
+
+
+
+
+    //other requests
+
+    @GetMapping("get-entities-per-page")
+    Integer getPageSize() {
+        return service.getPageSize();
+    }
+
+    @PostMapping("/modify-entities-per-page/{entitiesPerPage}")
+    void setPageSize(@PathVariable int entitiesPerPage)
+    {
+        this.service.setPageSize(entitiesPerPage);
     }
 }

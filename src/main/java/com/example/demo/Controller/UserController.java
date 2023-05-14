@@ -40,20 +40,23 @@ public class UserController {
     }
 
     @GetMapping("/user-number-adults/{id}")
-    Integer getUserNumberOfCarsById(@PathVariable Long id) {
+    Integer getUserNumberOfAdultsById(@PathVariable Long id) {
         return userService.getUserByNrOfAdults(id);
     }
 
     @GetMapping("/user-number-children/{id}")
-    Integer getUserNumberOfPilotsById(@PathVariable Long id) {
+    Integer getUserNumberOfChildrenById(@PathVariable Long id) {
         return userService.getUserByNrOfChildren(id);
     }
 
     @GetMapping("/user-number-families/{id}")
-    Integer getUserNumberOfRacesById(@PathVariable Long id) {
+    Integer getUserNumberOfFamiliesById(@PathVariable Long id) {
         return userService.getUserByNrOfFamilies(id);
     }
-
+    @GetMapping("/user-number-friends/{id}")
+    Integer getUserNumberOfFriendsById(@PathVariable Long id) {
+        return userService.getUserByNrOfFriends(id);
+    }
     @GetMapping("/user-search")
     List<User> getPilotsByName(@RequestParam(required = false) String username) {
         return this.userService.searchUsersByUsername(username);
@@ -62,7 +65,7 @@ public class UserController {
     @PutMapping("/user-profile/{id}")
     UserProfile updateUserProfile(@Valid @RequestBody UserProfile newUserProfile,
                                   @PathVariable Long id) {
-
+        System.out.println(id);
         return userService.updateUserProfile(newUserProfile, id);
     }
 
@@ -70,9 +73,6 @@ public class UserController {
     User updateUser(@Valid @RequestBody HashMap<String, Boolean> roles,
                     @PathVariable Long id,
                     @RequestHeader("Authorization") String token) {
-        System.out.println(token);
-        System.out.println(id);
-        System.out.println(roles);
         String username = this.jwtUtils.getUserNameFromJwtToken(token);
         User user = this.userService.getUserByUsername(username);
 

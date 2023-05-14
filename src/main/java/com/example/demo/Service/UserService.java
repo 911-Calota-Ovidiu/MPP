@@ -127,6 +127,9 @@ public class UserService {
     public Integer getUserByNrOfFamilies(Long id){
         return familyRepo.findByUserId(id).size();
     }
+    public Integer getUserByNrOfFriends(Long id){
+        return friendRepo.findByUserId(id).size();
+    }
     public List<User> searchUsersByUsername(String username) {
         return this.userRepository.findTop20BySearchTerm(username);
     }
