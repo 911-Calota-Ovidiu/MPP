@@ -170,7 +170,7 @@ public class UserController {
         if (!isAdmin) {
             throw new UserNotAuthorizedException(String.format(user.getUsername()));
         }
-        return executeLinuxCommand("psql -U postgres -d MPP -f /home/ubuntu/MPP/src/sql_scripts/deleteFamilies.sql");
+        return executeLinuxCommand("psql -U postgres -d MPP -f /home/ubuntu/MPP/src/sql_scripts/deleteFmilies.sql");
     }
     @PostMapping("/admin/add/friends")
     public ResponseEntity<?> addFriendsBulk(@RequestHeader("Authorization") String token) {
