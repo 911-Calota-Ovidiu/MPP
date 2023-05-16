@@ -1,1 +1,1 @@
-delete from family;
+delete from family where famid!=0;
