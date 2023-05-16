@@ -1,1 +1,1 @@
-TRUNCATE TABLE first_friend, second_friend, friend, family, adults, children;
+TRUNCATE TABLE first_friend, second_friend, friend,children, family, adults;
