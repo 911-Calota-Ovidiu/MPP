@@ -85,118 +85,46 @@ public class UserController {
         return userService.updateRolesUser(roles, id, user.getId());
     }
     @DeleteMapping("/admin/delete/all")
-    public ResponseEntity<?> deleteAllRecords(@RequestHeader("Authorization") String token) {
-        String username = this.jwtUtils.getUserNameFromJwtToken(token);
-        User user = this.userService.getUserByUsername(username);
-        boolean isAdmin = user.getRoles().stream().anyMatch((role) ->
-                role.getName() == ERole.ROLE_ADMIN
-        );
-        if (!isAdmin) {
-            throw new UserNotAuthorizedException(String.format(user.getUsername()));
-        }
+    public ResponseEntity<?> deleteAllRecords() {
         return executeLinuxCommand("psql -U postgres -d MPP -f /home/ubuntu/MPP/src/sql_scripts/deleteAll.sql");
     }
     @PostMapping("/admin/add/adults")
-    public ResponseEntity<?> addAdultsBulk(@RequestHeader("Authorization") String token) {
-        String username = this.jwtUtils.getUserNameFromJwtToken(token);
-        User user = this.userService.getUserByUsername(username);
-        boolean isAdmin = user.getRoles().stream().anyMatch((role) ->
-                role.getName() == ERole.ROLE_ADMIN
-        );
-        if (!isAdmin) {
-            throw new UserNotAuthorizedException(String.format(user.getUsername()));
-        }
+    public ResponseEntity<?> addAdultsBulk() {
         return executeLinuxCommand("psql -U postgres -d MPP -f /home/ubuntu/MPP/src/sql_scripts/adults.sql");
     }
     @DeleteMapping("/admin/delete/adults")
-    public ResponseEntity<?> deleteAdultsBulk(@RequestHeader("Authorization") String token) {
-        String username = this.jwtUtils.getUserNameFromJwtToken(token);
-        User user = this.userService.getUserByUsername(username);
-        boolean isAdmin = user.getRoles().stream().anyMatch((role) ->
-                role.getName() == ERole.ROLE_ADMIN
-        );
-        if (!isAdmin) {
-            throw new UserNotAuthorizedException(String.format(user.getUsername()));
-        }
+    public ResponseEntity<?> deleteAdultsBulk() {
         return executeLinuxCommand("psql -U postgres -d MPP -f /home/ubuntu/MPP/src/sql_scripts/deleteAdults.sql");
     }
 
 
     @PostMapping("/admin/add/children")
-    public ResponseEntity<?> addChildrenBulk(@RequestHeader("Authorization") String token) {
-        String username = this.jwtUtils.getUserNameFromJwtToken(token);
-        User user = this.userService.getUserByUsername(username);
-        boolean isAdmin = user.getRoles().stream().anyMatch((role) ->
-                role.getName() == ERole.ROLE_ADMIN
-        );
-        if (!isAdmin) {
-            throw new UserNotAuthorizedException(String.format(user.getUsername()));
-        }
+    public ResponseEntity<?> addChildrenBulk() {
         return executeLinuxCommand("psql -U postgres -d MPP -f /home/ubuntu/MPP/src/sql_scripts/children.sql");
     }
     @DeleteMapping("/admin/delete/children")
-    public ResponseEntity<?> deleteChildrenBulk(@RequestHeader("Authorization") String token) {
-        String username = this.jwtUtils.getUserNameFromJwtToken(token);
-        User user = this.userService.getUserByUsername(username);
-        boolean isAdmin = user.getRoles().stream().anyMatch((role) ->
-                role.getName() == ERole.ROLE_ADMIN
-        );
-        if (!isAdmin) {
-            throw new UserNotAuthorizedException(String.format(user.getUsername()));
-        }
+    public ResponseEntity<?> deleteChildrenBulk() {
         return executeLinuxCommand("psql -U postgres -d MPP -f /home/ubuntu/MPP/src/sql_scripts/deleteChildren.sql");
     }
 
 
     @PostMapping("/admin/add/families")
-    public ResponseEntity<?> addFamiliesBulk(@RequestHeader("Authorization") String token) {
-        String username = this.jwtUtils.getUserNameFromJwtToken(token);
-        User user = this.userService.getUserByUsername(username);
-        boolean isAdmin = user.getRoles().stream().anyMatch((role) ->
-                role.getName() == ERole.ROLE_ADMIN
-        );
-        if (!isAdmin) {
-            throw new UserNotAuthorizedException(String.format(user.getUsername()));
-        }
+    public ResponseEntity<?> addFamiliesBulk() {
         return executeLinuxCommand("psql -U postgres -d MPP -f /home/ubuntu/MPP/src/sql_scripts/families.sql");
     }
     @DeleteMapping("/admin/delete/families")
-    public ResponseEntity<?> deleteFamiliesBulk(@RequestHeader("Authorization") String token) {
-        String username = this.jwtUtils.getUserNameFromJwtToken(token);
-        User user = this.userService.getUserByUsername(username);
-        boolean isAdmin = user.getRoles().stream().anyMatch((role) ->
-                role.getName() == ERole.ROLE_ADMIN
-        );
-        if (!isAdmin) {
-            throw new UserNotAuthorizedException(String.format(user.getUsername()));
-        }
+    public ResponseEntity<?> deleteFamiliesBulk() {
         return executeLinuxCommand("psql -U postgres -d MPP -f /home/ubuntu/MPP/src/sql_scripts/deleteFmilies.sql");
     }
     @PostMapping("/admin/add/friends")
-    public ResponseEntity<?> addFriendsBulk(@RequestHeader("Authorization") String token) {
-        String username = this.jwtUtils.getUserNameFromJwtToken(token);
-        User user = this.userService.getUserByUsername(username);
-        boolean isAdmin = user.getRoles().stream().anyMatch((role) ->
-                role.getName() == ERole.ROLE_ADMIN
-        );
-        if (!isAdmin) {
-            throw new UserNotAuthorizedException(String.format(user.getUsername()));
-        }
+    public ResponseEntity<?> addFriendsBulk() {
         executeLinuxCommand("psql -U postgres -d MPP -f /home/ubuntu/MPP/src/sql_scripts/friend.sql");
         executeLinuxCommand("psql -U postgres -d MPP -f /home/ubuntu/MPP/src/sql_scripts/first_friend.sql");
         return executeLinuxCommand("psql -U postgres -d MPP -f /home/ubuntu/MPP/src/sql_scripts/second_friend.sql");
 
     }
     @DeleteMapping("/admin/delete/friends")
-    public ResponseEntity<?> deleteFriendsBulk(@RequestHeader("Authorization") String token) {
-        String username = this.jwtUtils.getUserNameFromJwtToken(token);
-        User user = this.userService.getUserByUsername(username);
-        boolean isAdmin = user.getRoles().stream().anyMatch((role) ->
-                role.getName() == ERole.ROLE_ADMIN
-        );
-        if (!isAdmin) {
-            throw new UserNotAuthorizedException(String.format(user.getUsername()));
-        }
+    public ResponseEntity<?> deleteFriendsBulk() {
         return executeLinuxCommand("psql -U postgres -d MPP -f /home/ubuntu/MPP/src/sql_scripts/deleteFriends.sql");
     }
     public ResponseEntity<?> executeLinuxCommand(String command) {
