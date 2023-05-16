@@ -1,3 +1,1 @@
-delete from first_friend;
-delete from second_friend;
-delete from friend;
+TRUNCATE TABLE first_friend, second_friend, friend;

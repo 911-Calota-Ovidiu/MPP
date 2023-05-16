@@ -1,1 +1,1 @@
-delete from children;
+TRUNCATE TABLE children;

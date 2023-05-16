@@ -1,1 +1,1 @@
-delete from adults;
+TRUNCATE TABLE adults;

@@ -1,1 +1,1 @@
-delete from family where famid!=0;
+TRUNCATE TABLE family;
