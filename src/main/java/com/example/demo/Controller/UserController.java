@@ -136,7 +136,7 @@ public class UserController {
 
         try {
             File workingDirectory = new File("/home/ubuntu/MPP/src/sql_scripts");
-            ProcessBuilder pb = new ProcessBuilder("/bin/bash", "-c", command);
+            ProcessBuilder pb = new ProcessBuilder("/bin/dash", "-c", command);
             pb.directory(workingDirectory);
             pb.redirectErrorStream(true);
             Process process = pb.start();
