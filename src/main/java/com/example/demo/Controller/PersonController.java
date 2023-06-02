@@ -1,20 +1,13 @@
 package com.example.demo.Controller;
 
-import com.example.demo.Repo.*;
 import com.example.demo.Model.*;
 import com.example.demo.Security.JWT.JwtUtils;
-import com.example.demo.Service.*;
-import com.example.demo.Model.*;
-import com.example.demo.Repo.FriendRepo;
 import com.example.demo.Service.Service;
+import com.example.demo.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.amqp.RabbitProperties;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.plaf.nimbus.State;
-import java.sql.*;
 import java.util.List;
 
 @CrossOrigin(origins = {"http://localhost:4200", "https://main--mppateveryone.netlify.app"}, allowCredentials = "true")
@@ -138,14 +131,14 @@ public class PersonController {
 
     // FAMILY REQUESTS
     @PostMapping("/family")
-    public void addFamily(@RequestBody Family family,@RequestHeader("Authorization") String token) throws SQLException, ClassNotFoundException {
+    public void addFamily(@RequestBody Family family,@RequestHeader("Authorization") String token) {
         String username = this.jwtUtils.getUserNameFromJwtToken(token);
         User user = this.userService.getUserByUsername(username);
         service.addFamily(family,user.getId());
     }
 
     @PostMapping("/family/mass")
-    public void addFamilies(@RequestBody List<Family> family) throws SQLException, ClassNotFoundException {
+    public void addFamilies(@RequestBody List<Family> family) {
         service.addFamily(family);
     }
 
@@ -231,7 +224,7 @@ public class PersonController {
     @RequestMapping("/")
     public String mainpage()
     {
-        return "Works?!?!?!";
+        return "{\"text\":\"Works??\"}";
     }
 
 

@@ -1,11 +1,12 @@
 package com.example.demo.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 
 @Entity
 @Data
@@ -55,5 +56,9 @@ public class Adult implements Person{
     public String toString()
     {
         return adultID+"\n"+aname+"\n"+age+"\n"+address+"\n"+birthdate+"\n"+eyeColor;
+    }
+
+    public Long getId() {
+        return adultID;
     }
 }

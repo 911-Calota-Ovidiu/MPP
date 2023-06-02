@@ -1,8 +1,8 @@
 package com.example.demo.Model;
 
 public class ChildDTO {
-    private String name;
-    private String address;
+    private final String name;
+    private final String address;
     private Long famid;
     public ChildDTO(String name, String address,Long famid)
     {

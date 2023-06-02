@@ -6,7 +6,6 @@ import com.example.demo.Exception.UserNotFoundException;
 import com.example.demo.Exception.UserProfileNotFoundException;
 import com.example.demo.Model.*;
 import com.example.demo.Repo.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;

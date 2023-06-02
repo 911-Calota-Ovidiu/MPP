@@ -2,9 +2,9 @@
 package com.example.demo.Model;
 
 public class AdultDTO {
-    private String name;
-    private String address;
-    private int age;
+    private final String name;
+    private final String address;
+    private final int age;
     public AdultDTO(String name, String address,int age)
     {
         this.name=name;

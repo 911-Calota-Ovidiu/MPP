@@ -1,10 +1,5 @@
 package com.example.demo.Controller;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import com.example.demo.Exception.JwtTokenInvalidException;
 import com.example.demo.Model.*;
 import com.example.demo.Repo.RoleRepository;
@@ -17,10 +12,8 @@ import com.example.demo.Security.Payload.Request.SignupRequest;
 import com.example.demo.Security.Payload.Response.MessageResponse;
 import com.example.demo.Security.Payload.Response.UserInfoResponse;
 import com.example.demo.Security.Services.UserDetailsImpl;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -32,6 +25,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @CrossOrigin(allowCredentials = "true", origins = {"http://localhost:4200", "https://main--mppateveryone.netlify.app"})

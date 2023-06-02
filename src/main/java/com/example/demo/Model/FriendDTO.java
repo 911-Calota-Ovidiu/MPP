@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FriendDTO {
-    private Child c1;
-    private List<Child> friends=new ArrayList<>();
+    private final Child c1;
+    private final List<Child> friends=new ArrayList<>();
     public FriendDTO(Child c)
     {
         c1=c;

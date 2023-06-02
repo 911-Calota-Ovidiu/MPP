@@ -1,19 +1,23 @@
 package com.example.demo.Controller;
 
-import com.example.demo.Exception.UserNotAuthorizedException;
-import com.example.demo.Model.ERole;
 import com.example.demo.Model.User;
 import com.example.demo.Model.UserProfile;
 import com.example.demo.Security.JWT.JwtUtils;
 import com.example.demo.Service.UserService;
+import org.apache.commons.lang3.SystemUtils;
+import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.apache.commons.lang3.SystemUtils;
 
 import javax.validation.Valid;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 
@@ -39,7 +43,29 @@ public class UserController {
     UserProfile getProfileByUsername(@PathVariable String username) {
         return userService.getUserProfileByUsername(username);
     }
+    @GetMapping("/user/gpt")
+    public String gptCall() throws IOException {
+        String url = "https://api.openai.com/v1/completions";
+        HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
 
+        con.setRequestMethod("POST");
+        con.setRequestProperty("Content-Type", "application/json");
+        con.setRequestProperty("Authorization", "Bearer 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");
+
+        JSONObject data = new JSONObject();
+        data.put("model", "text-davinci-003");
+        data.put("prompt", "Write an example of a bio in the first person. Max 255 characters");
+        data.put("max_tokens", 4000);
+        data.put("temperature", 1.0);
+
+        con.setDoOutput(true);
+        con.getOutputStream().write(data.toString().getBytes());
+        String output = new BufferedReader(new InputStreamReader(con.getInputStream())).lines()
+                .reduce((a, b) -> a + b).get();
+
+        System.out.println(new JSONObject(output).getJSONArray("choices").getJSONObject(0).getString("text"));
+        return "{\"text\":\""+  new JSONObject(output).getJSONArray("choices").getJSONObject(0).getString("text").replaceAll("\n","")+"\"}";
+    }
     @GetMapping("/user/{username}")
     User getUserByUsername(@PathVariable String username) {
         return userService.getUserByUsername(username);

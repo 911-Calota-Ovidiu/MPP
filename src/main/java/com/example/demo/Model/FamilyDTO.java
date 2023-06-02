@@ -1,8 +1,8 @@
 package com.example.demo.Model;
 
 public class FamilyDTO {
-    private Long mom,dad;
-    private String address;
+    private final Long mom,dad;
+    private final String address;
     public FamilyDTO(Long mom, Long dad, String address)
     {
         this.mom=mom;
