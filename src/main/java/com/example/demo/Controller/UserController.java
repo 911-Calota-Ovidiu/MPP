@@ -6,6 +6,7 @@ import com.example.demo.Security.JWT.JwtUtils;
 import com.example.demo.Service.UserService;
 import org.apache.commons.lang3.SystemUtils;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -27,6 +28,8 @@ import java.util.List;
 @Validated
 public class UserController {
     private final UserService userService;
+    @Value("${openai.api.key}")
+    private String key;
 
     private final JwtUtils jwtUtils;
 
@@ -47,10 +50,10 @@ public class UserController {
     public String gptCall() throws IOException {
         String url = "https://api.openai.com/v1/completions";
         HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
-
+        System.out.println(key);
         con.setRequestMethod("POST");
         con.setRequestProperty("Content-Type", "application/json");
-        con.setRequestProperty("Authorization", "Bearer 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");
+        con.setRequestProperty("Authorization", "Bearer "+key);
 
         JSONObject data = new JSONObject();
         data.put("model", "text-davinci-003");
