@@ -50,7 +50,7 @@ public class UserController {
 
         con.setRequestMethod("POST");
         con.setRequestProperty("Content-Type", "application/json");
-        con.setRequestProperty("Authorization", "Bearer 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");
+        con.setRequestProperty("Authorization", "Bearer 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");
 
         JSONObject data = new JSONObject();
         data.put("model", "text-davinci-003");
