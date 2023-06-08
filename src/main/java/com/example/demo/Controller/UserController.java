@@ -6,7 +6,8 @@ import com.example.demo.Security.JWT.JwtUtils;
 import com.example.demo.Service.UserService;
 import org.apache.commons.lang3.SystemUtils;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -28,8 +29,8 @@ import java.util.List;
 @Validated
 public class UserController {
     private final UserService userService;
-    @Value("${openai.api.key}")
-    private String key;
+    @Autowired
+    private Environment env;
 
     private final JwtUtils jwtUtils;
 
@@ -50,10 +51,9 @@ public class UserController {
     public String gptCall() throws IOException {
         String url = "https://api.openai.com/v1/completions";
         HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
-        System.out.println(key);
         con.setRequestMethod("POST");
         con.setRequestProperty("Content-Type", "application/json");
-        con.setRequestProperty("Authorization", "Bearer "+key);
+        con.setRequestProperty("Authorization", "Bearer "+env.getProperty("API_KEY"));
 
         JSONObject data = new JSONObject();
         data.put("model", "text-davinci-003");
@@ -66,7 +66,6 @@ public class UserController {
         String output = new BufferedReader(new InputStreamReader(con.getInputStream())).lines()
                 .reduce((a, b) -> a + b).get();
 
-        System.out.println(new JSONObject(output).getJSONArray("choices").getJSONObject(0).getString("text"));
         return "{\"text\":\""+  new JSONObject(output).getJSONArray("choices").getJSONObject(0).getString("text").replaceAll("\n","")+"\"}";
     }
     @GetMapping("/user/{username}")
