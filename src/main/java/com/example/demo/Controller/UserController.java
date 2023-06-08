@@ -6,8 +6,6 @@ import com.example.demo.Security.JWT.JwtUtils;
 import com.example.demo.Service.UserService;
 import org.apache.commons.lang3.SystemUtils;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -29,8 +27,7 @@ import java.util.List;
 @Validated
 public class UserController {
     private final UserService userService;
-    @Autowired
-    private Environment env;
+
 
     private final JwtUtils jwtUtils;
 
@@ -53,7 +50,7 @@ public class UserController {
         HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
         con.setRequestMethod("POST");
         con.setRequestProperty("Content-Type", "application/json");
-        con.setRequestProperty("Authorization", "Bearer "+env.getProperty("API_KEY"));
+        con.setRequestProperty("Authorization", "Bearer "+System.getenv("API_KEY"));
 
         JSONObject data = new JSONObject();
         data.put("model", "text-davinci-003");
